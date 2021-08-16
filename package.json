@@ -1,0 +1,14 @@
+{
+    "name": "ledger-co",
+    "version": "1.0.0",
+    "description": "The Ledger Co",
+    "main": "geektrust.js",
+    "scripts": {
+        "start": "node geektrust.js",
+        "test": "jest"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "jest": "^27.0.6"
+    }
+}
