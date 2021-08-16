@@ -1,128 +1,105 @@
-This document explains how we compile and execute your solution in NPM execution Environment. __You **MUST** only submit source code and it should not include the node_modules folder.__ 
+## The Ledger Co Challenge
+
+You work at a startup called The Ledger Co., a marketplace for banks to lend money to borrowers and receive payments for the loans. The interest for the loan is calculated by I = P*N*R where P is the principal amount, N is the number of years and R is the rate of interest. The total amount to repay will be A = P + I The amount should be paid back monthly in the form of EMIs. The borrowers can also pay a lump sum (that is, an amount more than their monthly EMI). In such a case, the lump sum will be deducted from the total amount (A) which can reduce the number of EMIs. This doesn’t affect the EMI amount unless the remaining total amount is less than the EMI. All transactions happen through The Ledger Co. You need to design a system to find out how much amount a user has paid the bank and how many EMIs are remaining.
+
+Your program should take as input:
+1. The bank name, borrower name, principal, interest and term.
+2. Lump sum payments if any.
+3. Given the bank name, borrower name, and EMI number, the program should print the total amount paid by the user (including the EMI number mentioned) and the remaining number of EMIs.
+
+The output should be
+1. Amount paid so far, and number of EMIs remaining for the user with the bank
+
+Input Commands
+
+There are 3 input commands defined to separate out the actions. Your input format will start with either of these commands i.e LOAN, PAYMENT, BALANCE
+
+LOAN
+
+The LOAN command receives a Bank name, Borrower name, Principal Amount, No of Years of Loan period and the Rate of Interest along with it.
+
+Format - LOAN BANK_NAME BORROWER_NAME PRINCIPAL NO_OF_YEARS RATE_OF_INTEREST
+Example- LOAN IDIDI Dale 10000 5 4 means a loan amount of 10000 is paid to Dale by IDIDI for a tenure of 5 years at 4% rate of interest.
+
+PAYMENT
+
+The PAYMENT command receives a Bank name, Borrower name, Lump sum amount and EMI number along with it. The EMI number indicates that the lump sum payment is done after that EMI.
+
+Format - PAYMENT BANK_NAME BORROWER_NAME LUMP_SUM_AMOUNT EMI_NO
+Example - PAYMENT MBI Dale 1000 5 means a lump sum payment of 1000 was done by Dale to MBI after 5 EMI payments.
+
+BALANCE
+
+The BALANCE command receives a Bank name, Borrower name and a EMI number along with it. It prints the total amount paid by the borrower, including all the Lump Sum amounts paid including that EMI number, and the no of EMIs remaining.
+
+Input format - BALANCE BANK_NAME BORROWER_NAME EMI_NO
+Example - BALANCE MBI Harry 12 means - print the amount paid including 12th EMI, and EMIs remaining for user Harry against the lender MBI.
+
+Output format - BANK_NAME BORROWER_NAME AMOUNT_PAID NO_OF_EMIS_LEFT
+Example - MBI Harry 1250 43
+
+Assumptions
+1. Repayments will be paid every month as EMIs until the total amount is recovered.
+2. Lump sum amounts can be paid at any point of time before the end of tenure.
+3. The EMI amount will be always ceiled to the nearest integer. For example 86.676767 can be ceiled to 87 and 100.10 to 101.
+4. The no of EMIs should be ceiled to the nearest whole number. For example 23.79 will be ceiled to 24 and 23.1 will also be ceiled to 24.
+5. If the last EMI is more than the remaining amount to pay, then it should be adjusted to match the amount remaining to pay. E.g. if the remaining amount to pay is 150 and your EMI is 160, then the last EMI amount paid should be 150.
+6. The total amount remaining at any EMI number should always include the EMIs paid and lump sum payments until that number. For example if there was a lump sum payment after EMI number 10, then the balance command for EMI number 10 should include the lump sum payment as well.
+
+SAMPLE INPUT-OUTPUT 1
+
+INPUT:
+LOAN IDIDI Dale 10000 5 4
+LOAN MBI Harry 2000 2 2
+BALANCE IDIDI Dale 5
+BALANCE IDIDI Dale 40
+BALANCE MBI Harry 12
+BALANCE MBI Harry 0
+
+OUTPUT:
+IDIDI Dale 1000 55
+IDIDI Dale 8000 20
+MBI Harry 1044 12
+MBI Harry 0 24
+
+SAMPLE INPUT-OUTPUT 2
+
+INPUT:
+LOAN IDIDI Dale 5000 1 6
+LOAN MBI Harry 10000 3 7
+LOAN UON Shelly 15000 2 9
+PAYMENT IDIDI Dale 1000 5
+PAYMENT MBI Harry 5000 10
+PAYMENT UON Shelly 7000 12
+BALANCE IDIDI Dale 3
+BALANCE IDIDI Dale 6
+BALANCE UON Shelly 12
+BALANCE MBI Harry 12
+
+OUTPUT:
+IDIDI Dale 1326 9
+IDIDI Dale 3652 4
+UON Shelly 15856 3
+MBI Harry 9044 10
+
+Input needs to be read from a text file, and output should be printed to console. Your program should execute and take the location to the test file as parameter.
+
+You can refer our help documents here - https://help.geektrust.in
+
+You can read build instructions here - https://github.com/geektrust/coding-problem-artefacts
 
 Under the NodeJS runtime enviroment, we execute Javascript and [Typescript](#Typescript) code. 
 
 # Javascript
 
-In all cases your main file should be named as `geektrust.js`.
-
-## Solution without Build files
-
-This main file, `geektrust.js` should receive in the command line argument and parse the file passed in. Once the file is parsed and the application processes the commands, it should only print the output.
-
-For e.g your `geektrust.js` file will look like this
-
-```javascript
-const filename = process.argv[2];
-// parse the file and process the command
-// print the output
-```
-
-We will execute the program using the command 
-
-```
-node geektrust.js
-```
-
-
-## Solution with Build files
-
-For Node JS we support the following dependency/build system as of now
-
-* [NPM](https://www.geeksforgeeks.org/node-js-npm-node-package-manager/)
-* [Yarn](https://yarnpkg.com/lang/en/)
-
-### NPM
-
-NPM is the default package manager for NodeJS. NPM can install all the dependencies of a project through the package.json file. It can also update and uninstall packages. In the package.json file, each dependency can specify a range of valid versions using the semantic versioning scheme, allowing developers to auto-update their packages while at the same time avoiding unwanted breaking changes.
-
-A sample `package.json` file can be downloaded from [here](https://raw.githubusercontent.com/geektrust/coding-problem-artefacts/master/NodeJS/package.json)
-
-In your `package.json` file make sure you have an entry for the following:
-
-1. Start script which points to the execution of `geektrust.js`
-2. Test script to execute all the unit tests present.
-
-```javascript
-"scripts": {
-    "start": "node geektrust.js",
-    "test": "mocha"
-}
-```
-
 #### Building and running the solution
 
-This main file, `geektrust.js` should receive in the command line argument and parse the file passed in. Once the file is parsed and the application processes the commands, it should only print the output.
+This main file, `geektrust.js` should receive in the command line argument and parse the file passed in. Once the file is parsed and the application processes the commands, it will only print the output.
 
-For e.g your `geektrust.js` file will look like this
-
-```javascript
-const filename = process.argv[2];
-// parse the file and process the command
-// print the output
-```
-
-We build and run the solution by using the following commands
+Build and run the solution by using the following commands
 
 ```
 npm install --silent
 npm start --silent <absolute_path_to_input_file>
 npm test --silent
 ```
-
-
-### Yarn
-
-We also support yarn as a build tool if you want to use it. 
-
-Your project should have the `package.json` file which handles all the dependencies. In that file make sure you have an entry for the start script which points to the execution of `geektrust.js` and a test script that executes all the unit tests present.
-
-```javascript
-"scripts": {
-    "start": "node geektrust.js",
-    "test": "mocha"
-}
-```
-
-
-#### Building and running the solution
-
-This main file, `geektrust.js` should receive in the command line argument and parse the file passed in. Once the file is parsed and the application processes the commands, it should only print the output.
-
-For e.g your `geektrust.js` file will look like this
-
-```javascript
-const filename = process.argv[2];
-// parse the file and process the command
-// print the output
-```
-
-We build and run the solution by using the following commands
-
-```javascript
-yarn install --silent
-yarn run --silent start <absolute_path_to_input_file>
-yarn test --silent
-```
-
-# Typescript
-
-Your main file should be named as `geektrust.ts`.
-
-As of now we only support Typescript under the NPM build system. This will require you to compile your typescript program into javascript. We run the commands `npm install --silent`, `npm start --silent` and `npm test --silent`. Please ensure that the `npm install` commands creates the file `geektrust.js` from your `geektrust.ts` file. The `npm start` command should then execute this `geektrust.js` file. 
-
-In your `package.json` file make sure you have an entry for the install, start and test script. 
-
-1. The `install` command  should install the depedencies and also build the `geektrust.js` file. 
-2. The `start` command will execute the program.
-3. The `test` command should execute all the unit tests present
-
-```javascript
-"scripts": {
-    "install" :"<command to create your geektrust.js file>",
-    "start": "node geektrust.js",
-    "test": "mocha"
-}
-```
-
-Note: If you create the `geektrust.js` file in some other folder (like dist/, build/ or out/)other than the main folder, then please appropriately edit the `start` command. 
